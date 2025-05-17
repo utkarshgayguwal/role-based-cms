@@ -11,14 +11,20 @@ use Illuminate\Support\Str;
 class AuthController extends Controller
 {
     public function login(Request $request){
-        $validated = $request->validate([
+        $rule = [
             'email' => 'required|email|exists:users,email',
             'password' => 'required'
-        ],[
+        ];
+
+        $customError = [
             'password' => 'The password field is required'
-        ],[
+        ];
+
+        $attributes = [
             'email' => 'Email Address'
-        ]);
+        ];
+
+        $validated = $request->validate( $rule, $customError, $attributes);
 
         $user = User::where('email', $validated['email'])->first();
 
@@ -43,16 +49,22 @@ class AuthController extends Controller
     }
 
     public function register(Request $request){
-        $validated = $request->validate([
+        $rule = [
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required'
-        ],[
+        ];
+
+        $customError = [
             'name.required' => 'The name field is required',
             'password' => 'The password field is required'
-        ],[
+        ];
+
+        $attributes = [
             'email' => 'Email Address'
-        ]);
+        ];
+
+        $validated = $request->validate( $rule, $customError, $attributes);
 
         $user = User::create([
             'name' => $validated['name'],
