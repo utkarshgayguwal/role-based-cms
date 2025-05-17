@@ -14,6 +14,11 @@ class AuthController extends Controller
         $validated = $request->validate([
             'email' => 'required|email|exists:users,email',
             'password' => 'required'
+        ],[
+            'email.required' => 'The email field is required',
+            'email.email' => 'The email field should be valid',
+            'email.exists' => 'The email does not exist',
+            'password' => 'The password field is required'
         ]);
 
         $user = User::where('email', $validated['email'])->first();
@@ -43,6 +48,12 @@ class AuthController extends Controller
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required'
+        ],[
+            'name.required' => 'The name field is required',
+            'email.required' => 'The email field is required',
+            'email.email' => 'The email field should be valid',
+            'email.unique' => 'The email should unique',
+            'password' => 'The password field is required'
         ]);
 
         $user = User::create([
