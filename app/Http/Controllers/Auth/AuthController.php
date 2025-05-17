@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginAuthRequest;
+use App\Http\Requests\Auth\RegisterAuthRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -11,31 +13,10 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(LoginAuthRequest $request)
     {
-        $rules = [
-            'email' => 'required|email|exists:users,email',
-            'password' => 'required'
-        ];
 
-        $customMessages = [
-            'password.required' => 'The password field is required'
-        ];
-
-        $attributes = [
-            'email' => 'Email Address'
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $customMessages, $attributes);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors(),
-                'code' => 422
-            ], 422);
-        }
-
-        $validated = $validator->validated();
+        $validated = $request->validated();
 
         $user = User::where('email', $validated['email'])->first();
 
@@ -58,33 +39,10 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function register(Request $request)
+    public function register(RegisterAuthRequest $request)
     {
-        $rules = [
-            'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required'
-        ];
 
-        $customMessages = [
-            'name.required' => 'The name field is required',
-            'password.required' => 'The password field is required'
-        ];
-
-        $attributes = [
-            'email' => 'Email Address'
-        ];
-
-        $validator = Validator::make($request->all(), $rules, $customMessages, $attributes);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors(),
-                'code' => 422
-            ], 422);
-        }
-
-        $validated = $validator->validated();
+        $validated = $request->validated();
 
         $user = User::create([
             'name' => $validated['name'],
