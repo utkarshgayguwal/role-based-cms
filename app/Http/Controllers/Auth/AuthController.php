@@ -56,4 +56,25 @@ class AuthController extends Controller
             'code' => 200
         ], 200);
     }
+
+    public function logout(Request $request)
+    {
+        $user = User::where('api_token', $request->api_token)->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthenticated.',
+                'code' => 401
+            ], 401);
+        }
+
+        // Clear the token
+        $user->api_token = null;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Logout successful.',
+            'code' => 200
+        ], 200);
+    }
 }
