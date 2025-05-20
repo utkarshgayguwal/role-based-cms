@@ -18,20 +18,22 @@ class RegisterAuthRequest extends FormRequest
         return [
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required'
+            'password' => 'required|confirmed' // This ensures password_confirmation matches
         ];
     }
-
+    
     public function messages(){
         return [
             'name.required' => 'The name field is required',
-            'password.required' => 'The password field is required'
+            'password.required' => 'The password field is required',
+            'password.confirmed' => 'The confirm password does not match'
         ];
     }
-
+    
     public function attributes(){
         return [
-            'email' => 'Email Address'
+            'email' => 'Email Address',
+            'password_confirmation' => 'Confirm Password'
         ];
     }
 }
